@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rules;
+use App\Models\Company;
 
-class LoginController extends Controller
+class CompanyController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -65,22 +63,28 @@ class LoginController extends Controller
         //
     }
 
-    public function login(Request $request) 
+    public function search(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+        $request->validate([
+            'name' => 'required|string|max:255',
         ]);
-
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-
-            return response()->json([
-                'message' => 'Login successful',
-                'user' => Auth::user(),
-            ], 200);
+    
+        $companies = Company::select(
+            'companies.id',
+            'companies.name',
+            'companies.description',
+            'companies.followers_count',
+            'companies.image',
+            'districts.name as district_name',
+        )
+        ->join('districts', 'companies.district_id', '=', 'districts.id')
+        ->where('companies.name', 'LIKE', '%' . $request->name . '%')
+        ->get();
+        
+        foreach ($companies as $company) {
+            $company->image = "http://localhost/escape-desarrollo-backend/public/imgs/".$company->image;
         }
-
-        return response()->json(['message' => 'Invalid credentials'], 401);
+    
+        return response()->json($companies);
     }
 }
