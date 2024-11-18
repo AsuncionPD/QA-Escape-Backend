@@ -24,7 +24,13 @@ class User extends Authenticatable
         'password',
         'latitude',
         'longitude',
-        'description'
+        'image',
+        'user_type_id',
+        'canton_id',
+        'district_id',
+        'preferences_1_id',
+        'preferences_2_id',
+        'preferences_3_id'
     ];
 
     /**
@@ -46,4 +52,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function user()
+    {
+        return $this->hasMany(User::class);
+    }
 }

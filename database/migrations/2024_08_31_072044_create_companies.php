@@ -15,25 +15,22 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('phone_number');
-            $table->unsignedBigInteger('category_id')->nullable();
+            $table->foreignId('user_type_id')->constrained();
+            $table->foreignId('category_id')->constrained();
+            $table->foreignId('sub_categories_id')->constrained();
             $table->string('email')->unique();
-            $table->string('description')->nullable();
+            $table->string('description');
             $table->string('image')->nullable();
-            $table->unsignedBigInteger('canton_id')->nullable();
-            $table->unsignedBigInteger('district_id')->nullable();
-            $table->string('address')->nullable();
-            $table->bigInteger('followers_count')->default(0);
+            $table->foreignId('canton_id')->constrained();
+            $table->foreignId('district_id')->constrained();
+            $table->double('latitude', 18, 15)->nullable();
+            $table->double('longitude', 18, 15)->nullable();
+            $table->bigInteger('followers_count')->default(0)->nullable();
+            $table->string('password');
+            $table->string('whatsapp')->nullable();
+            $table->bigInteger('following_count')->default(0)->nullable(); 
+            $table->rememberToken();
             $table->timestamps();
-            
-            // Indexes
-            $table->index('category_id');
-            $table->index('canton_id');
-            $table->index('district_id');
-
-            // Foreign Keys
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
-            $table->foreign('canton_id')->references('id')->on('cantons')->onDelete('set null');
-            $table->foreign('district_id')->references('id')->on('districts')->onDelete('set null');
         });
     }
 

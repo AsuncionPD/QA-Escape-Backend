@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('company_id')->nullable();
             $table->string('description');
-            $table->string('image');
             $table->timestamps();
 
             // Index
